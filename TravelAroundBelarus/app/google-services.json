@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "357766527824",
+    "project_id": "travelaroundbelarus-9be47",
+    "storage_bucket": "travelaroundbelarus-9be47.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:357766527824:android:6dd91ed96027c942980a55",
+        "android_client_info": {
+          "package_name": "com.example.travelaroundbelarus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "357766527824-r5vedn58j524r2vn6estfarq70i725d6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDG42TxCW7oWcnvJEMCiZuFaX6F2fMWrYg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "357766527824-r5vedn58j524r2vn6estfarq70i725d6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

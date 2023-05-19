@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/nightbel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".personal_account">
+
+    <Button
+        android:id="@+id/showinfo"
+        android:layout_width="280dp"
+        android:layout_height="71dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="100dp"
+        android:text="показать информацию о пользователи"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/batton_back"
+        android:layout_width="138dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="256dp"
+        android:layout_marginTop="524dp"
+        android:text="Выйти"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/Map"
+        android:layout_width="280dp"
+        android:layout_height="71dp"
+        android:layout_marginTop="136dp"
+        android:layout_marginEnd="100dp"
+        android:text="открыть карту"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

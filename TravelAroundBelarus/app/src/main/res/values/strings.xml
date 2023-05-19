@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Travel Around Belarus</string>
+    <string name="app_in_name">Путиводитель по Беларусии</string>
+    <string name="app_name_author">Добро Пожаловать в Беларусь</string>
+    <string name="text_botton">Войдите в учетную запись</string>
+    <string name="button_sign_in">Войти</string>
+    <string name="button_registrayion">Зарегистрироваться</string>
+</resources>
