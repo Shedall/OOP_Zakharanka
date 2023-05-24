@@ -5,4 +5,5 @@
     <color name="text_botton">#c70421</color>
     <color name="riple">#520582</color>
     <color name="red">#b50404</color>
+    <color name="custom_text_color">#FF0000</color>
 </resources>

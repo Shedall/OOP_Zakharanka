@@ -36,8 +36,10 @@ public class personal_account extends AppCompatActivity {
 
     private void showinfouser() {
         User user = getIntent().getParcelableExtra("user");
+        String userID = getIntent().getStringExtra("userid");
         Intent intent = new Intent(personal_account.this, UserInfoactivity.class);
         intent.putExtra("user", user);
+        intent.putExtra("userid",userID);
         startActivity(intent);
         finish();
     }

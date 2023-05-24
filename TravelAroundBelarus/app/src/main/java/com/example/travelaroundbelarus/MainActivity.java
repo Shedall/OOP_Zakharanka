@@ -29,11 +29,13 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
+    User user;
     Button btnSignIn,btnRegistration,btnexit;
     FirebaseAuth auth;
     FirebaseDatabase db;
     DatabaseReference users;
     RelativeLayout root;
+    String emailIn,passwordIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {showSign_in_Window();}
+
         });
         btnexit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,11 +119,12 @@ public class MainActivity extends AppCompatActivity {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             // Получение данных пользователя из базы данных
-                                            User user = dataSnapshot.getValue(User.class);
+                                             user = dataSnapshot.getValue(User.class);
                                             if (user != null) {
                                                 // Передача данных пользователя на страницу personal_account
                                                 Intent intent = new Intent(MainActivity.this, personal_account.class);
                                                 intent.putExtra("user", user);
+                                                intent.putExtra("userid",userId);
                                                 startActivity(intent);
                                                 finish();
                                             }
@@ -133,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                                     });
                                 }
                             }
+
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -161,9 +166,11 @@ public class MainActivity extends AppCompatActivity {
         dialog.setView(registration_window);
 
         final TextView password = registration_window.findViewById(R.id.Password);
+        passwordIn = password.toString();
         final TextView name = registration_window.findViewById(R.id.name);
         final TextView lastname = registration_window.findViewById(R.id.lastname);
         final TextView email = registration_window.findViewById(R.id.Email);
+        emailIn = email.toString();
         final TextView phone = registration_window.findViewById(R.id.Phone);
 
         dialog.setNegativeButton("отменить", new DialogInterface.OnClickListener() {
@@ -213,6 +220,54 @@ public class MainActivity extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Void unused) {
                                                 Snackbar.make(root, "пользователь успешно добавлен!", Snackbar.LENGTH_LONG).show();
+                                                //автоматичемкий вход в систему
+                                                auth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
+                                                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                                            @Override
+                                                            public void onSuccess(AuthResult authResult) {
+                                                                // Получение текущего пользователя Firebase
+                                                                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                                                                if (firebaseUser != null) {
+                                                                    String userId = firebaseUser.getUid();
+                                                                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+                                                                    final User finaluser = user;
+
+                                                                    userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                            // Получение данных пользователя из базы данных
+                                                                            User finaluser_2 = dataSnapshot.getValue(User.class);
+                                                                            if (finaluser_2 != null) {
+                                                                                finaluser.setEmail(finaluser_2.getEmail());
+                                                                                finaluser.setPassword(finaluser_2.getPassword());
+                                                                                finaluser.setName(finaluser_2.getName());
+                                                                                finaluser.setLastname(finaluser_2.getLastname());
+                                                                                finaluser.setPhone(finaluser_2.getPhone());
+                                                                                // Передача данных пользователя на страницу personal_account
+                                                                                Intent intent = new Intent(MainActivity.this, personal_account.class);
+                                                                                intent.putExtra("user", finaluser);
+                                                                                intent.putExtra("userid",userId);
+                                                                                startActivity(intent);
+                                                                                finish();
+                                                                            }
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                            Snackbar.make(root, "Ошибка при получении данных пользователя", Snackbar.LENGTH_LONG).show();
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }
+
+                                                        })
+                                                        .addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Snackbar.make(root, "Ошибка авторизации: " + e.getMessage(), Snackbar.LENGTH_LONG).show();
+                                                            }
+                                                        });
+
                                             }
                                         });
                             }
@@ -222,11 +277,10 @@ public class MainActivity extends AppCompatActivity {
                                     Snackbar.make(root,"ошибка регистрации" + e.getMessage(),Snackbar.LENGTH_LONG).show();
                                 }
                         });
-
-
             }
         });
 
         dialog.show();
+
     }
 }
