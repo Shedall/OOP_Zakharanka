@@ -32,7 +32,6 @@ public class UserInfoactivity extends AppCompatActivity {
     Button btnback,btnedit,btndel;
 
     ConstraintLayout root;
-    //User user = getIntent().getParcelableExtra("user");
 
 
     @Override
@@ -77,32 +76,49 @@ public class UserInfoactivity extends AppCompatActivity {
     }
 
     public void onuserdel(){
-        String userID = getIntent().getStringExtra("userid");
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userID);
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        firebaseUser.delete();
-        userRef.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Удаление:");
+        dialog.setMessage("Вы уверены,что хотите удалить аккаунт?");
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View empty_window = inflater.inflate(R.layout.empty, null);
+        dialog.setView(empty_window);
+        dialog.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
             @Override
-            public void onSuccess(Void unused) {
-                Snackbar.make(root, "Пользователь успешно удален", Snackbar.LENGTH_LONG).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Snackbar.make(root, "Ошибка удаления пользователя", Snackbar.LENGTH_LONG).show();
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
             }
         });
+        dialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String userID = getIntent().getStringExtra("userid");
+                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userID);
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                firebaseUser.delete();
+                userRef.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Snackbar.make(root, "Пользователь успешно удален", Snackbar.LENGTH_LONG).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Snackbar.make(root, "Ошибка удаления пользователя", Snackbar.LENGTH_LONG).show();
+                    }
+                });
 
-        Intent intent = new Intent(UserInfoactivity.this,MainActivity.class);
-        startActivity(intent);
-        finish();
+                Intent intent = new Intent(UserInfoactivity.this,MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        dialog.show();
     }
     public void onUserEdit() {
         User user = getIntent().getParcelableExtra("user");
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Редактирование:");
-        dialog.setMessage("Введите новые данные" +"\n"
-                +"ВНИМАНИЕ:ПРИ РЕДАКТИРОВАНИЕ ДАННЫХ ВАМ ПРИДЕТСЯ АВТОРИЗОВЫВАТЬСЯ ПО НОВОЙ!");
+        dialog.setMessage("Измените данные");
         LayoutInflater inflater = LayoutInflater.from(this);
         View edit_window = inflater.inflate(R.layout.userinfoedit, null);
         dialog.setView(edit_window);
@@ -210,9 +226,13 @@ public class UserInfoactivity extends AppCompatActivity {
                     userRef.child("lastname").setValue(Lastname_ed.getText().toString());
                     userRef.child("phone").setValue(phone_ed.getText().toString());
 
-                    Intent intent = new Intent(UserInfoactivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    user.setEmail(Email_ed.getText().toString());
+                    user.setPassword(password_ed.getText().toString());
+                    user.setPhone(phone_ed.getText().toString());
+                    user.setName(Name_ed.getText().toString());
+                    user.setLastname(Lastname_ed.getText().toString());
+
+                    shouinfouser(user);
                 }
             }
 
@@ -234,6 +254,22 @@ public class UserInfoactivity extends AppCompatActivity {
             lastname_view.setText(user.getLastname().toString());
             phone_view.setText(user.getPhone().toString());
             password_view.setText(user.getPassword().toString());
+    }
+
+    private void shouinfouser(User user)
+    {
+        //User user = getIntent().getParcelableExtra("user");
+        TextView name_view = findViewById(R.id.name_us);
+        TextView email_view = findViewById(R.id.Email_us);
+        TextView lastname_view = findViewById(R.id.lastname_us);
+        TextView phone_view = findViewById(R.id.Phone_us);
+        TextView password_view = findViewById(R.id.Password_us);
+
+        name_view.setText(user.getName().toString());
+        email_view.setText(user.getEmail().toString());
+        lastname_view.setText(user.getLastname().toString());
+        phone_view.setText(user.getPhone().toString());
+        password_view.setText(user.getPassword().toString());
     }
     //СДЕЛАТЬ СКРЫВАЕМЫЙ ПАРОЛЬ!!!
 }

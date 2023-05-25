@@ -31,7 +31,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/Map"
+        android:id="@+id/btnMap"
         android:layout_width="280dp"
         android:layout_height="71dp"
         android:layout_marginTop="136dp"

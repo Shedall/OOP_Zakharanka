@@ -19,6 +19,7 @@ public class personal_account extends AppCompatActivity {
         setContentView(R.layout.activity_personal_account);
         btnback = findViewById(R.id.batton_back);
         btnshowinfo = findViewById(R.id.showinfo);
+        btnmap = findViewById(R.id.btnMap);
 
         btnback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,6 +33,20 @@ public class personal_account extends AppCompatActivity {
                 showinfouser();
             }
         });
+
+        btnmap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openmap();
+            }
+        });
+    }
+
+    private void openmap() {
+        //Intent intent = new Intent();
+        //intent.setAction(Intent.ACTION_VIEW);
+        Intent intent = new Intent(personal_account.this,MapsActivity.class);
+        startActivity(intent);
     }
 
     private void showinfouser() {
