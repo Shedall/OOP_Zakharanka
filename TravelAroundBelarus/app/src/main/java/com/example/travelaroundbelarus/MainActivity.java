@@ -3,6 +3,7 @@ package com.example.travelaroundbelarus;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     RelativeLayout root;
     String emailIn,passwordIn;
 
+    String savedemail = "", savedpassword = "", savedName = "", savednumber = "", savedsername = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,12 +57,12 @@ public class MainActivity extends AppCompatActivity {
         btnRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showRegistrationWindow();
+                showRegistrationWindow(true);
             }
         });
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {showSign_in_Window();}
+            public void onClick(View v) {showSign_in_Window(true);}
 
         });
         btnexit.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void showSign_in_Window() {
+    private void showSign_in_Window(boolean a) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Войти:");
         dialog.setMessage("Введите данные для входа");
@@ -83,6 +86,21 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView password = sign_in_window.findViewById(R.id.Password);
         final TextView email = sign_in_window.findViewById(R.id.Email);
+
+        final CardView sign_activ;
+        sign_activ = sign_in_window.findViewById(R.id.sign_in_win);
+
+
+        if (a == true)
+        {
+            password.setText("");
+            email.setText("");
+        }
+        else
+        {
+            password.setText(savedpassword);
+            email.setText(savedemail);
+        }
 
         dialog.setNegativeButton("отменить", new DialogInterface.OnClickListener() {
             @Override
@@ -95,12 +113,35 @@ public class MainActivity extends AppCompatActivity {
         dialog.setPositiveButton("Войти", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
+                savedemail = email.getText().toString(); // Сохранение значения поля
+                savedpassword = password.getText().toString();
+
                 if(TextUtils.isEmpty(email.getText().toString())){
-                    Snackbar.make(root,"Введите вашу почту",Snackbar.LENGTH_LONG).show();
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(sign_activ.getContext());
+                    dialog.setTitle("Ошибка авторизации");
+                    dialog.setMessage("Введите почту!!!");
+                    dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            showSign_in_Window(false);
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    dialog.show();
                     return;
                 }
                 if(password.getText().toString().length() < 5){
-                    Snackbar.make(root,"Введите пароль(не менее 5-и символов",Snackbar.LENGTH_LONG).show();
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(sign_activ.getContext());
+                    dialog.setTitle("Ошибка авторизации");
+                    dialog.setMessage("Введите пароль(не менее 5-и символов");
+                    dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            showSign_in_Window(false);
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    dialog.show();
                     return;
                 }
                 //авторизация пользователя
@@ -142,7 +183,17 @@ public class MainActivity extends AppCompatActivity {
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Snackbar.make(root, "Ошибка авторизации: " + e.getMessage(), Snackbar.LENGTH_LONG).show();
+                                AlertDialog.Builder dialog = new AlertDialog.Builder(sign_activ.getContext());
+                                dialog.setTitle("Ошибка авторизации");
+                                dialog.setMessage(e.getMessage());
+                                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        showSign_in_Window(false);
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+                                dialog.show();
                             }
                         });
 
@@ -156,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void showRegistrationWindow() {
+    private void showRegistrationWindow(boolean a) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Регистрация:");
         dialog.setMessage("Введите свои данные");
@@ -173,6 +224,27 @@ public class MainActivity extends AppCompatActivity {
         emailIn = email.toString();
         final TextView phone = registration_window.findViewById(R.id.Phone);
 
+        final CardView reg_activ;
+        reg_activ = registration_window.findViewById(R.id.reg_activity);
+
+
+        if (a == true)
+        {
+            password.setText("");
+            name.setText("");
+            lastname.setText("");
+            email.setText("");
+            phone.setText("");
+        }
+        else
+        {
+            password.setText(savedpassword);
+            name.setText(savedName);
+            lastname.setText(savedsername);
+            email.setText(savedemail);
+            phone.setText(savednumber);
+        }
+
         dialog.setNegativeButton("отменить", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which){
@@ -184,24 +256,80 @@ public class MainActivity extends AppCompatActivity {
         dialog.setPositiveButton("Зарегистрировать", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
+                savedemail = email.getText().toString(); // Сохранение значения поля
+                savedName = name.getText().toString();
+                savednumber = phone.getText().toString();
+                savedpassword = password.getText().toString();
+                savedsername = lastname.getText().toString();
+
                 if(TextUtils.isEmpty(email.getText().toString())){
-                    Snackbar.make(root,"Введите вашу почту",Snackbar.LENGTH_LONG).show();
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(reg_activ.getContext());
+                    dialog.setTitle("Ошибка регистрации");
+                    dialog.setMessage("Введите почту!!!");
+                    dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            showRegistrationWindow(false);
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    dialog.show();
                     return;
                 }
                 if(TextUtils.isEmpty(name.getText().toString())){
-                    Snackbar.make(root,"Введите ваше имя",Snackbar.LENGTH_LONG).show();
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(reg_activ.getContext());
+                    dialog.setTitle("Ошибка регистрации");
+                    dialog.setMessage("Введите ваше имя");
+                    dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            showRegistrationWindow(false);
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    dialog.show();
                     return;
                 }
                 if(TextUtils.isEmpty(lastname.getText().toString())){
-                    Snackbar.make(root,"Введите вашу фамилию",Snackbar.LENGTH_LONG).show();
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(reg_activ.getContext());
+                    dialog.setTitle("Ошибка регистрации");
+                    dialog.setMessage("Введите вашу фамилию");
+                    dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            showRegistrationWindow(false);
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    dialog.show();
                     return;
                 }
                 if(password.getText().toString().length() < 5){
-                    Snackbar.make(root,"Введите пароль(не менее 5-и символов",Snackbar.LENGTH_LONG).show();
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(reg_activ.getContext());
+                    dialog.setTitle("Ошибка регистрации");
+                    dialog.setMessage("Введите пароль(не менее 5-и символов");
+                    dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            showRegistrationWindow(false);
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    dialog.show();
                     return;
                 }
                 if(TextUtils.isEmpty(phone.getText().toString())){
-                    Snackbar.make(root,"Введите ваш номер телефона",Snackbar.LENGTH_LONG).show();
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(reg_activ.getContext());
+                    dialog.setTitle("Ошибка регистрации");
+                    dialog.setMessage("Введите ваш номер телефона");
+                    dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            showRegistrationWindow(false);
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    dialog.show();
                     return;
                 }
                 //регисьрация пользователя
@@ -274,7 +402,17 @@ public class MainActivity extends AppCompatActivity {
                                 }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Snackbar.make(root,"ошибка регистрации" + e.getMessage(),Snackbar.LENGTH_LONG).show();
+                                    AlertDialog.Builder dialog = new AlertDialog.Builder(reg_activ.getContext());
+                                    dialog.setTitle("Ошибка регистрации");
+                                    dialog.setMessage("Введите почту!!!");
+                                    dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            showRegistrationWindow(false);
+                                            dialogInterface.dismiss();
+                                        }
+                                    });
+                                    dialog.show();
                                 }
                         });
             }

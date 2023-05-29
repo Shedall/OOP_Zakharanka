@@ -53,6 +53,8 @@ dependencies {
     implementation("com.google.firebase:firebase-database:20.2.1")
     implementation("com.android.support:design:26.0.0")
     implementation("com.android.support:cardview-v7:28.0.0")
-    implementation("com.google.android.gms:play-services-maps:17.0.0")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.android.gms:play-services-places:17.0.0")
+    implementation("com.google.android.libraries.places:places:3.1.0")
 
 }
