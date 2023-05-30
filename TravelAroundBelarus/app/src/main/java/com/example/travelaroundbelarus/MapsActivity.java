@@ -106,26 +106,36 @@ package com.example.travelaroundbelarus;
 ///////////////////////////////////////////////////////////////////
 
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.travelaroundbelarus.models.Attraction;
+import com.example.travelaroundbelarus.models.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 import java.util.List;
@@ -134,6 +144,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private PlacesClient placesClient;
     private GoogleMap googleMap;
+    FirebaseDatabase db;
+    DatabaseReference attraction;
+    Attraction atr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +162,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        db = FirebaseDatabase.getInstance();
+        attraction = db.getReference("attraction");
     }
 
     @Override
@@ -205,12 +221,74 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Установка камеры карты на Беларусь
         LatLng belarusBoundsCenter = new LatLng(53.7098, 27.9534);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(belarusBoundsCenter, 7));
-        LatLng sydney = new LatLng(53.9045,  27.5615);
-        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Minsk"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        attraction.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot attractionSnapshot : dataSnapshot.getChildren()) {
+                    // Получите данные о достопримечательности из attractionSnapshot
+                    /*Attraction*/ atr = attractionSnapshot.getValue(Attraction.class);
+
+                    addMarker(atr.getLatitude(),atr.getLongitude(),atr.getTitle(),atr.getAdres(),atr.getDescription());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(MapsActivity.this, "Ошибка при выполнении запроса: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //addMarker(53.451295,26.473257,"Мирский замок","Мир, Кореличский район","Классика жанра! Замок должен был стать резиденцией магнатского рода Ильиничей, которые начали строить его еще в XVI веке. Но род быстро закончился, а квадратные метры полезной площади перешли Радзивиллам, которые превратили его в радостный многослойный торт. По легенде, они еще и забабахали подземный ход в три полосы до второй своей резиденции – Несвижского замка. Последним владельцем Мирского замка был князь Михаил Святополк-Мирский, отец которого при загадочных обстоятельствах утонул в замковом рве, который сам же и приказал выкопать. Во времена Советов здесь находилась рабочая артель, а во время оккупации – гетто и лагерь для военнопленных. В 2000-е замок пережил масштабную реконструкцию, здесь разместили бизнес-центр и отель.");
         googleMap.getUiSettings().setZoomControlsEnabled(true);
         googleMap.getUiSettings().setZoomGesturesEnabled(true);
         googleMap.getUiSettings().setScrollGesturesEnabled(true);
+    }
+
+    public void addMarker(double latitude, double longitude, String title, String address, String description) {
+        LatLng latLng = new LatLng(latitude, longitude);
+
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(latLng)
+                .title(title)
+                .snippet(address);
+
+        // Добавление пользовательской иконки маркера (если требуется)
+        //Bitmap icon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.custom_marker);
+        //markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+
+        Marker marker = googleMap.addMarker(markerOptions);
+        marker.setTag(description);
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                String description = (String) marker.getTag();
+                String title = marker.getTitle();
+                String address = marker.getSnippet();
+                if (description != null) {
+                    // Открытие нового окна или действия при нажатии на метку
+                    openInfoWindow(marker,title,address, description);
+                }
+                return false;
+            }
+        });
+    }
+
+    private void openInfoWindow(Marker marker,String title, String address, String description) {
+        // Действия при открытии информационного окна (например, открытие новой активности или диалогового окна)
+        //Toast.makeText(mContext, "Описание: " + description, Toast.LENGTH_SHORT).show();
+        User user = getIntent().getParcelableExtra("user");
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("                 " + title + "                   ");
+        dialog.setMessage("АДРЕС : " + address+"\n" + "\n" + "ОПИСАНИЕ :\n" + description);
+        dialog.setPositiveButton("закрыть", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 }
 

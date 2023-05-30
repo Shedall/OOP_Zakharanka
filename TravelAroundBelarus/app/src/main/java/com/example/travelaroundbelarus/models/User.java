@@ -6,20 +6,25 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class User implements Parcelable {
 
     private String email,password,name,lastname,phone;
+    private boolean admin;
+    private List<Attraction> attractions;
 
     public User(){}
 
-    public User(String email, String password, String name, String lastname, String phone) {
+    public User(String email, String password, String name, String lastname, String phone,boolean admin) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.lastname = lastname;
         this.phone = phone;
+        this.admin = admin;
     }
+
     protected User(Parcel in) {
         name = in.readString();
         email = in.readString();
@@ -85,6 +90,14 @@ public class User implements Parcelable {
         return 0;
     }
 
+    public List<Attraction> getAttractions() {
+        return attractions;
+    }
+
+    public void setAttractions(List<Attraction> attractions) {
+        this.attractions = attractions;
+    }
+
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(name);
@@ -92,7 +105,15 @@ public class User implements Parcelable {
         dest.writeString(lastname);
         dest.writeString(password);
         dest.writeString(phone);
+        dest.writeList(attractions);
 
 
+    }
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    public boolean isAdmin() {
+        return admin;
     }
 }

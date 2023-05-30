@@ -5,18 +5,7 @@
     android:background="@drawable/nightbel"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".personal_account">
-
-    <Button
-        android:id="@+id/showinfo"
-        android:layout_width="280dp"
-        android:layout_height="71dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="100dp"
-        android:text="показать информацию о пользователи"
-        android:textSize="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    tools:context=".Admin_account">
 
     <Button
         android:id="@+id/batton_back"
@@ -34,21 +23,22 @@
         android:id="@+id/btnMap"
         android:layout_width="280dp"
         android:layout_height="71dp"
-        android:layout_marginTop="136dp"
-        android:layout_marginEnd="100dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="112dp"
         android:text="открыть карту"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btninfoBel"
+        android:id="@+id/btnaddMark"
         android:layout_width="280dp"
         android:layout_height="71dp"
-        android:layout_marginTop="232dp"
-        android:layout_marginEnd="100dp"
-        android:text="информация о Беларуси"
+        android:layout_marginTop="140dp"
+        android:layout_marginEnd="112dp"
+        android:text="добавить объект"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

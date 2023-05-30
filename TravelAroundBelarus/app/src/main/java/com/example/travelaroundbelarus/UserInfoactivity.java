@@ -66,13 +66,24 @@ public class UserInfoactivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed(){
-        Intent intent = new Intent(UserInfoactivity.this, personal_account.class);
         User user = getIntent().getParcelableExtra("user");
-        String userID = getIntent().getStringExtra("userid");
-        intent.putExtra("user",user);
-        intent.putExtra("userid",userID);
-        startActivity(intent);
-        finish();
+        if(!user.isAdmin()) {
+            Intent intent = new Intent(UserInfoactivity.this, personal_account.class);
+            String userID = getIntent().getStringExtra("userid");
+            intent.putExtra("user", user);
+            intent.putExtra("userid", userID);
+            startActivity(intent);
+            finish();
+        }
+        else
+        {
+            Intent intent = new Intent(UserInfoactivity.this, Admin_account.class);
+            String userID = getIntent().getStringExtra("userid");
+            intent.putExtra("user", user);
+            intent.putExtra("userid", userID);
+            startActivity(intent);
+            finish();
+        }
     }
 
     public void onuserdel(){

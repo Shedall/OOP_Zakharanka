@@ -162,12 +162,22 @@ public class MainActivity extends AppCompatActivity {
                                             // Получение данных пользователя из базы данных
                                              user = dataSnapshot.getValue(User.class);
                                             if (user != null) {
-                                                // Передача данных пользователя на страницу personal_account
-                                                Intent intent = new Intent(MainActivity.this, personal_account.class);
-                                                intent.putExtra("user", user);
-                                                intent.putExtra("userid",userId);
-                                                startActivity(intent);
-                                                finish();
+                                                if(user.isAdmin() == true)
+                                                {
+                                                    Intent intent = new Intent(MainActivity.this, Admin_account.class);
+                                                    intent.putExtra("user", user);
+                                                    intent.putExtra("userid", userId);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }
+                                                else {
+                                                    // Передача данных пользователя на страницу personal_account
+                                                    Intent intent = new Intent(MainActivity.this, personal_account.class);
+                                                    intent.putExtra("user", user);
+                                                    intent.putExtra("userid", userId);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }
                                             }
                                         }
 
@@ -337,8 +347,8 @@ public class MainActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
-                                User user = new User(email.getText().toString(), password.getText().toString(), name.getText().toString(),
-                                        lastname.getText().toString(), phone.getText().toString());
+                                User user = new User    (email.getText().toString(), password.getText().toString(), name.getText().toString(),
+                                        lastname.getText().toString(), phone.getText().toString(),false);
                                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                                 String userId = currentUser.getUid();
 
