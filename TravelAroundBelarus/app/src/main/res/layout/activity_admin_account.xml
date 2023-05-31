@@ -41,4 +41,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/btndelobgect"
+        android:layout_width="280dp"
+        android:layout_height="71dp"
+        android:layout_marginTop="240dp"
+        android:layout_marginEnd="112dp"
+        android:text="удалить объект"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnshowalluser"
+        android:layout_width="280dp"
+        android:layout_height="71dp"
+        android:layout_marginTop="336dp"
+        android:layout_marginEnd="112dp"
+        android:text="показать всех пользователей"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

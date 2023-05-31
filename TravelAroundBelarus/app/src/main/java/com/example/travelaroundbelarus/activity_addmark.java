@@ -68,6 +68,18 @@ public class activity_addmark extends AppCompatActivity {
         EditText adres = findViewById(R.id.adres);
         EditText disription = findViewById(R.id.description);
 
+        String latitudeText = latitude.getText().toString().trim();
+        String longitudeText = longitude.getText().toString().trim();
+        String titleText = title.getText().toString().trim();
+        String adresText = adres.getText().toString().trim();
+        String disriptionText = disription.getText().toString().trim();
+
+        // Проверка на пустые строки
+        if (latitudeText.isEmpty() || longitudeText.isEmpty() || titleText.isEmpty() || adresText.isEmpty() || disriptionText.isEmpty()) {
+            Toast.makeText(activity_addmark.this, "Заполните все поля", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         double dabllatitude = Double.parseDouble(latitude.getText().toString());
         double dabllongitude = Double.parseDouble(longitude.getText().toString());
 

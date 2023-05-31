@@ -20,6 +20,12 @@
         android:theme="@style/Theme.TravelAroundBelarus"
         tools:targetApi="31">
         <activity
+            android:name=".activity_editmark"
+            android:exported="false" />
+        <activity
+            android:name=".activity_del"
+            android:exported="false" />
+        <activity
             android:name=".activity_addmark"
             android:exported="false" />
         <!--

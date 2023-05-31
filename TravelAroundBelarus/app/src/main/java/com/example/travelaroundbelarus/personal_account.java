@@ -13,7 +13,7 @@ import com.example.travelaroundbelarus.models.User;
 
 public class personal_account extends AppCompatActivity {
 
-    Button btnback,btnmap,btnshowinfo,btninfobel;
+    Button btnback,btnmap,btnshowinfo,btninfobel,btnlistatr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

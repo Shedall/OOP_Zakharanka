@@ -113,6 +113,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.travelaroundbelarus.models.Attraction;
@@ -135,8 +137,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -145,6 +149,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private PlacesClient placesClient;
     private GoogleMap googleMap;
     FirebaseDatabase db;
+    DatabaseReference usersRef;
     DatabaseReference attraction;
     Attraction atr;
 
@@ -279,6 +284,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Действия при открытии информационного окна (например, открытие новой активности или диалогового окна)
         //Toast.makeText(mContext, "Описание: " + description, Toast.LENGTH_SHORT).show();
         User user = getIntent().getParcelableExtra("user");
+        String userId = getIntent().getStringExtra("userid");
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("                 " + title + "                   ");
         dialog.setMessage("АДРЕС : " + address+"\n" + "\n" + "ОПИСАНИЕ :\n" + description);
